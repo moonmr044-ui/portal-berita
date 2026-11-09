@@ -6,6 +6,7 @@ namespace App\Http\Requests\Auth;
 
 use App\Enums\RoleName;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 /**
  * Login untuk seluruh pengguna (kru maupun pembaca).
@@ -78,7 +79,7 @@ final class LoginRequest extends FormRequest
     /**
      * Rule tambahan bila nanti diperlukan (mis. captcha setelah N gagal).
      *
-     * @return array<string, mixed>
+     * @return list<mixed>
      */
     public static function crewRoleRule(): array
     {

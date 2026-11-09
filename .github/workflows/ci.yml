@@ -109,9 +109,9 @@ jobs:
       REDIS_QUEUE_DB: '2'
       REDIS_SESSION_DB: '3'
       REDIS_VIEWS_DB: '4'
-      CACHE_STORE: redis
+      CACHE_STORE: array
       QUEUE_CONNECTION: sync
-      SESSION_DRIVER: redis
+      SESSION_DRIVER: array
       MAIL_MAILER: array
       FILESYSTEM_DISK: local
       SEARCH_DRIVER: database

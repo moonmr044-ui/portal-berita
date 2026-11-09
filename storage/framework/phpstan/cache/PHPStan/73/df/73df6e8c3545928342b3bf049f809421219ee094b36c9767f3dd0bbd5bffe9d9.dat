@@ -1,1 +1,0 @@
-O:23:"PHPStan\Cache\CacheItem":2:{s:11:"variableKey";s:74:"v2-0d1f80b425b07bfa64fe6b058f4f634377a0ffa6bb0dd7c926430c2f8c6ed0cd-8.5.12";s:4:"data";a:3:{s:7:"classes";a:1:{s:39:"laravel\pulse\recorders\concerns\groups";b:1;}s:9:"functions";a:0:{}s:9:"constants";a:0:{}}}

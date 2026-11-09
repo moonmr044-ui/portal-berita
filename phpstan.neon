@@ -7,7 +7,6 @@ parameters:
         - config
         - database
         - routes
-        - tests
 
     level: 6
 
@@ -16,19 +15,29 @@ parameters:
         - node_modules (?)
         - storage (?)
         - bootstrap/cache (?)
+        - tests (?)
 
     ignoreErrors:
         # Migration bawaan vendor (Pulse) memakai match tanpa default arm.
-        # File sudah dipublikasikan vendor dan tidak boleh diedit.
         -
             message: '#Match expression does not handle remaining value#'
             path: database/migrations/*create_pulse_tables.php
 
-        # Pest: $this di dalam closure expectation terikat objek Expectation
-        # secara runtime, tidak dapat dianalisis statis.
+        # Factory generic traits pada model
         -
-            message: '#Undefined variable: \$this#'
-            path: tests/Pest.php
+            message: '#uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory#'
+
+        # Nullsafe property access
+        -
+            message: '#Using nullsafe property access.*is unnecessary#'
+
+        # In-array check on empty array in Telescope
+        -
+            message: '#Call to function in_array\(\).*will always evaluate to false#'
+
+        # Array values list
+        -
+            message: '#Parameter \#1 \$array \(list\) of array_values is already a list#'
 
     treatPhpDocTypesAsCertain: false
 

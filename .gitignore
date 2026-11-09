@@ -21,6 +21,7 @@
 /storage/*.key
 /storage/pail
 /storage/backups
+/storage/framework/phpstan
 /storage/app/public/media
 /storage/certs
 *.sql.gz
