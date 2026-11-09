@@ -165,3 +165,8 @@ dependency, OPcache aktif, dan proses berjalan sebagai user `appuser` (non-root)
 ## 8. Lisensi
 
 MIT.
+
+##9. Catatan Tim Frontend (Bandung)
+Tim Frontend berhasil terhubung ke repository portal-berita.
+Siap untuk integrasi UI dan slicing halaman.
+
