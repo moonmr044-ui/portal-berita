@@ -35,14 +35,14 @@ class EpaperPdfGenerator
             $posts->prepend($headline);
         }
 
-        $editionNo = $epaper?->edition_number ?? ('EDISI #' . now()->format('ymd'));
+        $editionNo = $epaper?->edition_number ?? ('EDISI #'.now()->format('ymd'));
         $editionDate = ($epaper?->edition_date ?? now())->translatedFormat('l, d F Y');
 
         return $this->buildPdfDocument($editionNo, $editionDate, $headline, $posts);
     }
 
     /**
-     * @param Collection<int, Post> $posts
+     * @param  Collection<int, Post>  $posts
      */
     private function buildPdfDocument(string $editionNo, string $editionDate, ?Post $headline, Collection $posts): string
     {
@@ -70,7 +70,7 @@ class EpaperPdfGenerator
                 // Edition Metadata Double Rule Bar
                 $currentStream .= "0 0 0 RG 1.2 w 40 743 m 555 743 l S\n";
                 $currentStream .= "0.1 0.1 0.1 rg\n";
-                $currentStream .= $this->pdfText('F2', 8.5, 42, 731, $this->cleanText($editionNo . '   |   ' . strtoupper($editionDate)));
+                $currentStream .= $this->pdfText('F2', 8.5, 42, 731, $this->cleanText($editionNo.'   |   '.strtoupper($editionDate)));
                 $currentStream .= $this->pdfText('F2', 8.5, 420, 731, 'AKSES PUBLIK TERBUKA & GRATIS');
                 $currentStream .= "0 0 0 RG 0.6 w 40 725 m 555 725 l S\n";
 
@@ -81,7 +81,7 @@ class EpaperPdfGenerator
                 $currentStream .= "40 802 515 3 re f\n";
                 $currentStream .= "0.15 0.15 0.15 rg\n";
                 $currentStream .= $this->pdfText('F2', 9.5, 40, 787, 'RUANG DATA  -  KORAN DIGITAL TERVERIFIKASI');
-                $currentStream .= $this->pdfText('F1', 8.5, 380, 787, $this->cleanText($editionNo . ' | ' . $editionDate));
+                $currentStream .= $this->pdfText('F1', 8.5, 380, 787, $this->cleanText($editionNo.' | '.$editionDate));
                 $currentStream .= "0.7 0.7 0.7 RG 0.6 w 40 780 m 555 780 l S\n";
 
                 $cursorY = 758.0;
@@ -103,7 +103,7 @@ class EpaperPdfGenerator
             // 1. LAPORAN UTAMA (HEADLINE)
             if ($headline) {
                 $catName = strtoupper($this->cleanText($headline->category?->name ?? 'UTAMA'));
-                $badgeText = 'HEADLINE: ' . $catName;
+                $badgeText = 'HEADLINE: '.$catName;
                 $badgeWidth = max(110.0, strlen($badgeText) * 5.1 + 14.0);
                 $currentStream .= "0.898 0.035 0.078 rg\n";
                 $currentStream .= sprintf("40 %.2f %.2f 15 re f\n", $cursorY - 3, $badgeWidth);
@@ -191,7 +191,7 @@ class EpaperPdfGenerator
                     }
 
                     // Post Excerpt + Body Summary
-                    $summaryText = trim($this->cleanText(($post->excerpt ? $post->excerpt . ' — ' : '') . strip_tags((string) $post->body)));
+                    $summaryText = trim($this->cleanText(($post->excerpt ? $post->excerpt.' — ' : '').strip_tags((string) $post->body)));
                     if ($summaryText !== '') {
                         $currentStream .= "0.2 0.2 0.2 rg\n";
                         $lines = array_slice($this->wrapText($summaryText, 92), 0, 6);
@@ -221,23 +221,23 @@ class EpaperPdfGenerator
             $footer .= "0.45 0.45 0.45 rg\n";
             $footer .= $this->pdfText('F1', 8, 40, 30, 'Diterbitkan oleh Redaksi Ruang Data (Independent Journalism & Data Perspectives) - Dokumen Resmi E-Paper');
             $footer .= $this->pdfText('F2', 8, 495, 30, "Halaman {$pageNum} / {$totalPages}");
-            $pages[$i] = $stream . $footer;
+            $pages[$i] = $stream.$footer;
         }
 
         return $this->assemblePdfObjects($pages);
     }
 
     /**
-     * @param list<string> $pageStreams
+     * @param  list<string>  $pageStreams
      */
     private function assemblePdfObjects(array $pageStreams): string
     {
         $objects = [];
         // 1: Catalog, 2: Pages, 3: Font Regular, 4: Font Bold, 5: Font Italic
-        $objects[1] = "<< /Type /Catalog /Pages 2 0 R >>";
-        $objects[3] = "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>";
-        $objects[4] = "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>";
-        $objects[5] = "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Oblique /Encoding /WinAnsiEncoding >>";
+        $objects[1] = '<< /Type /Catalog /Pages 2 0 R >>';
+        $objects[3] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>';
+        $objects[4] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>';
+        $objects[5] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Oblique /Encoding /WinAnsiEncoding >>';
 
         $kids = [];
         $nextId = 6;
@@ -248,7 +248,7 @@ class EpaperPdfGenerator
             $kids[] = "{$pageObjId} 0 R";
 
             $objects[$pageObjId] = sprintf(
-                "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents %d 0 R >>",
+                '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents %d 0 R >>',
                 $contentObjId
             );
             $len = strlen($stream);
@@ -256,7 +256,7 @@ class EpaperPdfGenerator
         }
 
         $objects[2] = sprintf(
-            "<< /Type /Pages /Kids [%s] /Count %d >>",
+            '<< /Type /Pages /Kids [%s] /Count %d >>',
             implode(' ', $kids),
             count($kids)
         );
@@ -273,7 +273,7 @@ class EpaperPdfGenerator
 
         $xrefOffset = strlen($pdf);
         $maxId = max(array_keys($objects));
-        $pdf .= "xref\n0 " . ($maxId + 1) . "\n";
+        $pdf .= "xref\n0 ".($maxId + 1)."\n";
         $pdf .= "0000000000 65535 f \n";
 
         for ($i = 1; $i <= $maxId; $i++) {
@@ -281,7 +281,7 @@ class EpaperPdfGenerator
             $pdf .= sprintf("%010d 00000 n \n", $offset);
         }
 
-        $pdf .= "trailer\n<< /Size " . ($maxId + 1) . " /Root 1 0 R >>\n";
+        $pdf .= "trailer\n<< /Size ".($maxId + 1)." /Root 1 0 R >>\n";
         $pdf .= "startxref\n{$xrefOffset}\n%%EOF\n";
 
         return $pdf;

@@ -145,14 +145,19 @@ jobs:
           cp .env.example .env
           php artisan key:generate
 
-      - name: Wait for MySQL
+      - name: Wait for MySQL & Grant Permissions
         run: |
           for i in $(seq 1 30); do
-            mysqladmin ping -h 127.0.0.1 -P 3306 -u sail -ppassword >/dev/null 2>&1 && break
+            mysqladmin ping -h 127.0.0.1 -P 3306 -u root -ppassword > /dev/null 2>&1 && break
             sleep 2
           done
-          mysql -h 127.0.0.1 -P 3306 -u root -ppassword \
-            -e "CREATE DATABASE IF NOT EXISTS portal_berita_testing CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;" || true
+          mysql -h 127.0.0.1 -P 3306 -u root -ppassword -e "
+            CREATE DATABASE IF NOT EXISTS portal_berita_testing CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+            GRANT ALL PRIVILEGES ON portal_berita_testing.* TO 'sail'@'%';
+            GRANT ALL PRIVILEGES ON \`portal_berita_testing_%\`.* TO 'sail'@'%';
+            GRANT CREATE ON *.* TO 'sail'@'%';
+            FLUSH PRIVILEGES;
+          "
 
       - name: Run Pest (parallel)
         run: php artisan test --parallel

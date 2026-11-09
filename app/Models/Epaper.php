@@ -62,7 +62,7 @@ class Epaper extends Model
         if (! $epaper && self::query()->count() === 0) {
             $latestPost = Post::published()->latestPublished()->first();
             $epaper = self::query()->create([
-                'edition_number' => 'EDISI #' . now()->format('ymd'),
+                'edition_number' => 'EDISI #'.now()->format('ymd'),
                 'edition_date' => $latestPost?->published_at?->toDateString() ?? now()->toDateString(),
                 'title' => $latestPost?->title ?? 'Edisi Cetak Harian Ruang Data',
                 'description' => 'Format digital resolusi tinggi dari kompilasi berita utama Ruang Data, gratis untuk seluruh pembaca.',

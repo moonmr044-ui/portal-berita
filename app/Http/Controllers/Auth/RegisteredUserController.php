@@ -68,6 +68,6 @@ final class RegisteredUserController extends Controller
 
         return redirect()
             ->intended($targetUrl)
-            ->with('status', 'Selamat datang, ' . $user->name . '! Akun pembaca Anda sudah aktif untuk menyukai dan mengomentari berita.');
+            ->with('status', 'Selamat datang, '.$user->name.'! Akun pembaca Anda sudah aktif untuk menyukai dan mengomentari berita.');
     }
 }

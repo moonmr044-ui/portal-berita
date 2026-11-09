@@ -224,7 +224,7 @@ class User extends Authenticatable
             return $this->avatar_path;
         }
 
-        return asset('storage/' . ltrim($this->avatar_path, '/'));
+        return asset('storage/'.ltrim($this->avatar_path, '/'));
     }
 
     /**

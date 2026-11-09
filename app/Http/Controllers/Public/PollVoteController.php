@@ -91,12 +91,12 @@ class PollVoteController extends Controller
     public static function resolveVoterToken(Request $request): string
     {
         if ($request->user()) {
-            return 'user_' . $request->user()->id;
+            return 'user_'.$request->user()->id;
         }
 
         $sessionId = $request->hasSession() ? $request->session()->getId() : '';
         $ip = (string) $request->ip();
 
-        return hash('sha256', $sessionId . '|' . $ip);
+        return hash('sha256', $sessionId.'|'.$ip);
     }
 }

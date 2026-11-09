@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
+use Throwable;
 
 class EmailOtpController extends Controller
 {
@@ -94,7 +95,7 @@ class EmailOtpController extends Controller
 
         try {
             Mail::to($user->email)->send(new LoginOtpMail($otpCode, $user->name));
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             // Jika ada error mail server, jangan sampai sistem crash
             report($e);
         }

@@ -22,6 +22,7 @@ class KruAndCategoryManagementTest extends TestCase
         $this->seed(RolePermissionSeeder::class);
         $this->seed(NewsPortalDemoSeeder::class);
     }
+
     public function test_super_admin_can_access_edit_kru_page(): void
     {
         $superAdmin = User::role(RoleName::SUPER_ADMIN->value)->first();

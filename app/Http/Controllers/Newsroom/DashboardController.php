@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Newsroom;
 
 use App\Enums\PostStatus;
 use App\Http\Controllers\Controller;
-use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;

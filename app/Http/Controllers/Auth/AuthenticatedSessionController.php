@@ -84,6 +84,6 @@ final class AuthenticatedSessionController extends Controller
 
         return redirect()
             ->intended($targetUrl)
-            ->with('status', 'Berhasil masuk sebagai ' . ($user?->name ?? 'Pembaca') . '.');
+            ->with('status', 'Berhasil masuk sebagai '.($user?->name ?? 'Pembaca').'.');
     }
 }

@@ -90,7 +90,7 @@ class PostInteractionController extends Controller
         $comment->ip_hash = hash_hmac('sha256', (string) $request->ip(), (string) config('app.key'));
         $comment->save();
 
-        return redirect(url()->previous() . '#komentar-pembaca')
+        return redirect(url()->previous().'#komentar-pembaca')
             ->with('status', 'Komentar Anda berhasil diterbitkan.');
     }
 
@@ -111,7 +111,7 @@ class PostInteractionController extends Controller
 
         $comment->delete();
 
-        return redirect(url()->previous() . '#komentar-pembaca')
+        return redirect(url()->previous().'#komentar-pembaca')
             ->with('status', 'Komentar berhasil dihapus.');
     }
 

@@ -6,13 +6,11 @@ namespace App\Http\Controllers\Public;
 
 use App\Enums\PostStatus;
 use App\Http\Controllers\Controller;
-use App\Models\Category;
 use App\Models\Post;
 use App\Models\SlugRedirect;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 class PostController extends Controller
 {

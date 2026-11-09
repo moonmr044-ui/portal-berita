@@ -103,7 +103,7 @@ class Media extends Model
         $url = Storage::disk($this->disk)->url($path);
         $parsed = parse_url($url);
 
-        return ($parsed['path'] ?? $url) . (isset($parsed['query']) ? '?' . $parsed['query'] : '');
+        return ($parsed['path'] ?? $url).(isset($parsed['query']) ? '?'.$parsed['query'] : '');
     }
 
     /**

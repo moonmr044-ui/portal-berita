@@ -30,6 +30,7 @@ class FullPortalSystemAuditTest extends TestCase
         $this->seed(RolePermissionSeeder::class);
         $this->seed(NewsPortalDemoSeeder::class);
     }
+
     private function authSuperAdmin(): User
     {
         $superAdmin = User::where('email', 'ahmadarifaie64@gmail.com')->first();
@@ -59,13 +60,13 @@ class FullPortalSystemAuditTest extends TestCase
 
         // 3. Category show
         $category = Category::where('is_active', true)->first();
-        $res = $this->get('/kategori/' . $category->slug);
+        $res = $this->get('/kategori/'.$category->slug);
         $res->assertOk();
         $res->assertSee($category->name);
 
         // 4. Single article reading
         $post = Post::published()->first();
-        $res = $this->get('/' . $post->category->slug . '/' . $post->slug);
+        $res = $this->get('/'.$post->category->slug.'/'.$post->slug);
         $res->assertOk();
         $res->assertSee($post->title);
     }
@@ -130,7 +131,7 @@ class FullPortalSystemAuditTest extends TestCase
 
         // Create
         $res = $this->actingAs($superAdmin)->withSession($session)->post('/newsroom/breaking-news', [
-            'title' => 'Audit Test Breaking News ' . Str::random(5),
+            'title' => 'Audit Test Breaking News '.Str::random(5),
             'url' => 'https://example.com/breaking',
             'duration_hours' => 2,
         ]);
@@ -140,11 +141,11 @@ class FullPortalSystemAuditTest extends TestCase
         $this->assertNotNull($bn);
 
         // Toggle
-        $res = $this->actingAs($superAdmin)->withSession($session)->post('/newsroom/breaking-news/' . $bn->id . '/toggle');
+        $res = $this->actingAs($superAdmin)->withSession($session)->post('/newsroom/breaking-news/'.$bn->id.'/toggle');
         $res->assertRedirect('/newsroom/breaking-news');
 
         // Delete
-        $res = $this->actingAs($superAdmin)->withSession($session)->delete('/newsroom/breaking-news/' . $bn->id);
+        $res = $this->actingAs($superAdmin)->withSession($session)->delete('/newsroom/breaking-news/'.$bn->id);
         $res->assertRedirect('/newsroom/breaking-news');
     }
 
@@ -161,7 +162,7 @@ class FullPortalSystemAuditTest extends TestCase
         $res->assertOk();
 
         // Create
-        $catName = 'Audit Kategori ' . Str::random(4);
+        $catName = 'Audit Kategori '.Str::random(4);
         $res = $this->actingAs($superAdmin)->withSession($session)->post('/newsroom/kategori', [
             'name' => $catName,
             'badge_color' => '#10B981',
@@ -174,12 +175,12 @@ class FullPortalSystemAuditTest extends TestCase
         $this->assertNotNull($cat);
 
         // Edit page
-        $res = $this->actingAs($superAdmin)->withSession($session)->get('/newsroom/kategori/' . $cat->id . '/edit');
+        $res = $this->actingAs($superAdmin)->withSession($session)->get('/newsroom/kategori/'.$cat->id.'/edit');
         $res->assertOk();
 
         // Update
-        $res = $this->actingAs($superAdmin)->withSession($session)->put('/newsroom/kategori/' . $cat->id, [
-            'name' => $catName . ' Updated',
+        $res = $this->actingAs($superAdmin)->withSession($session)->put('/newsroom/kategori/'.$cat->id, [
+            'name' => $catName.' Updated',
             'badge_color' => '#3B82F6',
             'sort_order' => 100,
             'is_active' => 1,
@@ -187,7 +188,7 @@ class FullPortalSystemAuditTest extends TestCase
         $res->assertRedirect('/newsroom/kategori');
 
         // Delete
-        $res = $this->actingAs($superAdmin)->withSession($session)->delete('/newsroom/kategori/' . $cat->id);
+        $res = $this->actingAs($superAdmin)->withSession($session)->delete('/newsroom/kategori/'.$cat->id);
         $res->assertRedirect('/newsroom/kategori');
     }
 
@@ -204,7 +205,7 @@ class FullPortalSystemAuditTest extends TestCase
         $res->assertOk();
 
         // Create
-        $kruEmail = 'kru.audit.' . Str::random(5) . '@portalberita.test';
+        $kruEmail = 'kru.audit.'.Str::random(5).'@portalberita.test';
         $res = $this->actingAs($superAdmin)->withSession($session)->post('/newsroom/kru', [
             'name' => 'Wartawan Audit',
             'email' => $kruEmail,
@@ -219,11 +220,11 @@ class FullPortalSystemAuditTest extends TestCase
         $this->assertTrue($kru->hasRole(RoleName::REPORTER->value));
 
         // Edit page
-        $res = $this->actingAs($superAdmin)->withSession($session)->get('/newsroom/kru/' . $kru->id . '/edit');
+        $res = $this->actingAs($superAdmin)->withSession($session)->get('/newsroom/kru/'.$kru->id.'/edit');
         $res->assertOk();
 
         // Update
-        $res = $this->actingAs($superAdmin)->withSession($session)->put('/newsroom/kru/' . $kru->id, [
+        $res = $this->actingAs($superAdmin)->withSession($session)->put('/newsroom/kru/'.$kru->id, [
             'name' => 'Wartawan Audit Terupdate',
             'email' => $kruEmail,
             'role' => RoleName::DESK_EDITOR->value,
@@ -235,7 +236,7 @@ class FullPortalSystemAuditTest extends TestCase
         $this->assertTrue($kru->hasRole(RoleName::DESK_EDITOR->value));
 
         // Delete
-        $res = $this->actingAs($superAdmin)->withSession($session)->delete('/newsroom/kru/' . $kru->id);
+        $res = $this->actingAs($superAdmin)->withSession($session)->delete('/newsroom/kru/'.$kru->id);
         $res->assertRedirect('/newsroom/kru');
         $this->assertSoftDeleted('users', ['id' => $kru->id]);
     }
@@ -250,7 +251,7 @@ class FullPortalSystemAuditTest extends TestCase
         ];
 
         // 1. Create Post as Draft
-        $title = 'Audit Naskah Lengkap ' . Str::random(5);
+        $title = 'Audit Naskah Lengkap '.Str::random(5);
         $res = $this->actingAs($superAdmin)->withSession($session)->post('/newsroom/naskah', [
             'title' => $title,
             'category_id' => $category->id,
@@ -266,11 +267,11 @@ class FullPortalSystemAuditTest extends TestCase
         $this->assertEquals(PostStatus::DRAFT, $post->status);
 
         // 2. Edit page
-        $res = $this->actingAs($superAdmin)->withSession($session)->get('/newsroom/naskah/' . $post->id . '/sunting');
+        $res = $this->actingAs($superAdmin)->withSession($session)->get('/newsroom/naskah/'.$post->id.'/sunting');
         $res->assertOk();
 
         // 3. Submit for review
-        $res = $this->actingAs($superAdmin)->withSession($session)->put('/newsroom/naskah/' . $post->id, [
+        $res = $this->actingAs($superAdmin)->withSession($session)->put('/newsroom/naskah/'.$post->id, [
             'title' => $title,
             'category_id' => $category->id,
             'excerpt' => $post->excerpt,
@@ -282,7 +283,7 @@ class FullPortalSystemAuditTest extends TestCase
         $this->assertEquals(PostStatus::UNDER_REVIEW, $post->status);
 
         // 4. Publish by Super Admin / Editor
-        $res = $this->actingAs($superAdmin)->withSession($session)->put('/newsroom/naskah/' . $post->id, [
+        $res = $this->actingAs($superAdmin)->withSession($session)->put('/newsroom/naskah/'.$post->id, [
             'title' => $title,
             'category_id' => $category->id,
             'excerpt' => $post->excerpt,
@@ -294,7 +295,7 @@ class FullPortalSystemAuditTest extends TestCase
         $this->assertEquals(PostStatus::PUBLISHED, $post->status);
 
         // 5. Takedown
-        $res = $this->actingAs($superAdmin)->withSession($session)->put('/newsroom/naskah/' . $post->id, [
+        $res = $this->actingAs($superAdmin)->withSession($session)->put('/newsroom/naskah/'.$post->id, [
             'title' => $title,
             'category_id' => $category->id,
             'excerpt' => $post->excerpt,
@@ -307,7 +308,7 @@ class FullPortalSystemAuditTest extends TestCase
         $this->assertEquals(PostStatus::TAKEDOWN, $post->status);
 
         // 6. Delete
-        $res = $this->actingAs($superAdmin)->withSession($session)->delete('/newsroom/naskah/' . $post->id);
+        $res = $this->actingAs($superAdmin)->withSession($session)->delete('/newsroom/naskah/'.$post->id);
         $res->assertRedirect('/newsroom/naskah');
         $this->assertSoftDeleted('posts', ['id' => $post->id]);
     }
@@ -323,7 +324,7 @@ class FullPortalSystemAuditTest extends TestCase
 
         // 2. Vote on Survei Pembaca via JSON & verify database persistence
         $firstOption = $poll->options->first();
-        $voteRes = $this->postJson('/survei/' . $poll->id . '/vote', [
+        $voteRes = $this->postJson('/survei/'.$poll->id.'/vote', [
             'poll_option_id' => $firstOption->id,
         ]);
         $voteRes->assertOk()
@@ -339,7 +340,7 @@ class FullPortalSystemAuditTest extends TestCase
         // 3. Indeks Berita & Arsip Redaksi (/cari) with date and category filters
         $post = Post::published()->first();
         $pubDate = $post->published_at->toDateString();
-        $indeksRes = $this->get('/cari?date=' . $pubDate . '&kategori=' . $post->category->slug);
+        $indeksRes = $this->get('/cari?date='.$pubDate.'&kategori='.$post->category->slug);
         $indeksRes->assertOk()->assertSee($post->title);
 
         // 4. E-Paper Reader (/epaper) & Dynamic PDF Download (/epaper/unduh)
@@ -409,14 +410,14 @@ class FullPortalSystemAuditTest extends TestCase
 
         // 2. Pembaca menyukai berita (Like) & membatalkan suka (Unlike)
         $post = Post::published()->first();
-        $likeRes = $this->actingAs($reader)->postJson('/interaksi/' . $post->id . '/like');
+        $likeRes = $this->actingAs($reader)->postJson('/interaksi/'.$post->id.'/like');
         $likeRes->assertOk()
             ->assertJsonPath('liked', true)
             ->assertJsonPath('likes_count', 1);
 
         // 3. Pembaca mengirim komentar pada artikel
         $commentText = 'Analisis data yang sangat tajam dan informatif dari tim redaksi!';
-        $commentRes = $this->actingAs($reader)->post('/interaksi/' . $post->id . '/komentar', [
+        $commentRes = $this->actingAs($reader)->post('/interaksi/'.$post->id.'/komentar', [
             'body' => $commentText,
         ]);
         $commentRes->assertRedirect();
@@ -428,7 +429,7 @@ class FullPortalSystemAuditTest extends TestCase
         ]);
 
         // Pastikan komentar & nama pembaca tampil di halaman detail berita
-        $detailRes = $this->get('/' . $post->category->slug . '/' . $post->slug);
+        $detailRes = $this->get('/'.$post->category->slug.'/'.$post->slug);
         $detailRes->assertOk()
             ->assertSee('Budi Santoso')
             ->assertSee($commentText);
@@ -441,7 +442,7 @@ class FullPortalSystemAuditTest extends TestCase
         ];
 
         $this->actingAs($superAdmin)->withSession($session)
-            ->put('/newsroom/kru/' . $reader->id, [
+            ->put('/newsroom/kru/'.$reader->id, [
                 'name' => $reader->name,
                 'email' => $reader->email,
                 'role' => RoleName::READER->value,

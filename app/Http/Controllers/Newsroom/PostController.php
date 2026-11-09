@@ -121,7 +121,7 @@ class PostController extends Controller
 
         $baseSlug = Str::slug($validated['title']);
         $uniqueSlug = Post::where('slug', $baseSlug)->exists()
-            ? $baseSlug . '-' . Str::random(5)
+            ? $baseSlug.'-'.Str::random(5)
             : $baseSlug;
 
         $post = Post::create([

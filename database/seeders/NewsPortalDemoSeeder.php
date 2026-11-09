@@ -15,7 +15,6 @@ use App\Models\Post;
 use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -319,7 +318,7 @@ class NewsPortalDemoSeeder extends Seeder
                     $tagIds[] = $tags[$tName]->id;
                 }
             }
-            if (!empty($tagIds)) {
+            if (! empty($tagIds)) {
                 $post->tags()->sync($tagIds);
             }
 

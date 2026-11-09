@@ -9,6 +9,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Throwable;
 
 class ImageOptimizer
 {
@@ -82,11 +83,11 @@ class ImageOptimizer
             }
 
             // Simpan ke file temporary WebP
-            $tmpFile = tempnam(sys_get_temp_dir(), 'webp_opt_') . '.webp';
+            $tmpFile = tempnam(sys_get_temp_dir(), 'webp_opt_').'.webp';
             $success = imagewebp($image, $tmpFile, $quality);
 
             if ($success && file_exists($tmpFile)) {
-                $filename = Str::random(40) . '.webp';
+                $filename = Str::random(40).'.webp';
                 $path = Storage::disk($disk)->putFileAs($directory, new File($tmpFile), $filename);
                 @unlink($tmpFile);
 
@@ -99,8 +100,8 @@ class ImageOptimizer
                     ];
                 }
             }
-        } catch (\Throwable $e) {
-            Log::warning('Gagal mengoptimasi gambar ke WebP, fallback ke file asli: ' . $e->getMessage());
+        } catch (Throwable $e) {
+            Log::warning('Gagal mengoptimasi gambar ke WebP, fallback ke file asli: '.$e->getMessage());
         }
 
         // Fallback aman jika terjadi error apapun

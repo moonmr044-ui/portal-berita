@@ -16,14 +16,14 @@ class ImageOptimizerTest extends TestCase
         Storage::fake('public');
 
         // Buat file JPEG palsu 100x100
-        $tmpJpeg = tempnam(sys_get_temp_dir(), 'test_img_') . '.jpg';
+        $tmpJpeg = tempnam(sys_get_temp_dir(), 'test_img_').'.jpg';
         $im = imagecreatetruecolor(100, 100);
         imagefill($im, 0, 0, imagecolorallocate($im, 200, 50, 50));
         imagejpeg($im, $tmpJpeg, 90);
 
         $file = new UploadedFile($tmpJpeg, 'sample.jpg', 'image/jpeg', null, true);
 
-        $optimizer = new ImageOptimizer();
+        $optimizer = new ImageOptimizer;
         $result = $optimizer->optimizeAndStore($file, 'posts', 'public');
 
         $this->assertEquals('public', $result['disk']);

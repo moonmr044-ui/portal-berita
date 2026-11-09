@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Public;
 
 use App\Enums\EditorialPickSlot;
-use App\Enums\PostStatus;
 use App\Http\Controllers\Controller;
 use App\Models\BreakingNews;
 use App\Models\Category;
@@ -17,7 +16,6 @@ use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 class HomeController extends Controller
 {
