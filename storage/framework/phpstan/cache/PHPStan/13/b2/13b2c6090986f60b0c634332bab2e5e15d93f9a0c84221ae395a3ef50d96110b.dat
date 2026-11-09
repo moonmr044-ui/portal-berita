@@ -1,0 +1,5 @@
+O:23:"PHPStan\Cache\CacheItem":2:{s:11:"variableKey";s:83:"v3-6.75.0.4-8.5.12-7a5a5bbcfc99cad6d5d71cd410a8b2f0e32259baf486fdd6c52842b581c1af54";s:4:"data";a:17:{s:4:"name";s:11:"crewSession";s:10:"parameters";a:0:{}s:16:"returnsReference";b:0;s:10:"returnType";a:2:{s:5:"class";s:55:"PHPStan\BetterReflection\Reflection\ReflectionNamedType";s:4:"data";a:2:{s:4:"name";s:5:"array";s:12:"isIdentifier";b:1;}}s:10:"attributes";a:0:{}s:10:"docComment";s:99:"/**
+ * Sesi kru yang sudah lolos tantangan 2FA dan belum idle.
+ *
+ * @return array<string, int>
+ */";s:9:"startLine";i:47;s:7:"endLine";i:53;s:11:"startColumn";i:1;s:9:"endColumn";i:1;s:10:"couldThrow";b:0;s:9:"isClosure";b:0;s:11:"isGenerator";b:0;s:10:"isVariadic";b:0;s:8:"isStatic";b:0;s:9:"namespace";N;s:13:"locatedSource";a:2:{s:5:"class";s:60:"PHPStan\BetterReflection\SourceLocator\Located\LocatedSource";s:4:"data";a:2:{s:4:"name";s:11:"crewSession";s:8:"filename";s:28:"/var/www/html/tests/Pest.php";}}}}

@@ -1,0 +1,149 @@
+# File: docker-compose.yml
+# Portal Berita - development stack (Laravel Sail compatible)
+# Semua service app memakai network, volume, dan env yang sama dengan laravel.test.
+# Jalankan: ./vendor/bin/sail up -d   atau   make up
+
+x-app-common: &app-common
+  build:
+    context: './vendor/laravel/sail/runtimes/8.5'
+    dockerfile: Dockerfile
+    args:
+      WWWGROUP: '${WWWGROUP}'
+  image: 'sail-8.5/app'
+  extra_hosts:
+    - 'host.docker.internal:host-gateway'
+  volumes:
+    - '.:/var/www/html'
+  environment:
+    WWWUSER: '${WWWUSER}'
+    LARAVEL_SAIL: 1
+    XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
+    XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
+    IGNITION_LOCAL_SITES_PATH: '${PWD}'
+  networks:
+    - sail
+  depends_on:
+    mysql:
+      condition: service_healthy
+    redis:
+      condition: service_healthy
+    mailpit:
+      condition: service_started
+
+services:
+  laravel.test:
+    <<: *app-common
+    ports:
+      - '${APP_PORT:-80}:80'
+      - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
+    healthcheck:
+      test:
+        - CMD
+        - php
+        - '-r'
+        - "exit(@file_get_contents('http://127.0.0.1/up') === false ? 1 : 0);"
+      retries: 3
+      timeout: 5s
+      interval: 10s
+      start_period: 30s
+
+  horizon:
+    <<: *app-common
+    command: php artisan horizon
+    restart: unless-stopped
+
+  scheduler:
+    <<: *app-common
+    command: php artisan schedule:work
+    restart: unless-stopped
+
+  mysql:
+    image: 'mysql:8.4'
+    ports:
+      - '${FORWARD_DB_PORT:-3306}:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_DATABASE: '${DB_DATABASE}'
+      MYSQL_USER: '${DB_USERNAME}'
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      MYSQL_EXTRA_OPTIONS: '${MYSQL_EXTRA_OPTIONS:-}'
+      TZ: '${APP_TIMEZONE:-UTC}'
+    volumes:
+      - 'sail-mysql:/var/lib/mysql'
+      - './vendor/laravel/sail/database/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
+    networks:
+      - sail
+    healthcheck:
+      test:
+        - CMD
+        - mysqladmin
+        - ping
+        - '-p${DB_PASSWORD}'
+      retries: 5
+      timeout: 5s
+      interval: 10s
+      start_period: 30s
+
+  redis:
+    image: 'redis:7-alpine'
+    command: 'redis-server --appendonly yes --save 60 1'
+    ports:
+      - '${FORWARD_REDIS_PORT:-6379}:6379'
+    volumes:
+      - 'sail-redis:/data'
+    networks:
+      - sail
+    healthcheck:
+      test:
+        - CMD
+        - redis-cli
+        - ping
+      retries: 5
+      timeout: 5s
+      interval: 10s
+
+  mailpit:
+    image: 'axllent/mailpit:latest'
+    ports:
+      - '${FORWARD_MAILPIT_PORT:-1025}:1025'
+      - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
+    networks:
+      - sail
+
+  # Profil opsional: docker compose --profile search up -d
+  meilisearch:
+    image: 'getmeili/meilisearch:v1.11'
+    profiles: ['search']
+    ports:
+      - '${FORWARD_MEILISEARCH_PORT:-7700}:7700'
+    environment:
+      MEILI_NO_ANALYTICS: '${MEILISEARCH_NO_ANALYTICS:-true}'
+      MEILI_UPGRADE_DB: '${MEILISEARCH_UPGRADE_DB:-true}'
+      MEILI_ENV: 'development'
+    volumes:
+      - 'sail-meilisearch:/meili_data'
+    networks:
+      - sail
+    healthcheck:
+      test:
+        - CMD
+        - wget
+        - '--no-verbose'
+        - '--spider'
+        - 'http://127.0.0.1:7700/health'
+      retries: 3
+      timeout: 5s
+
+networks:
+  sail:
+    driver: bridge
+
+volumes:
+  sail-mysql:
+    driver: local
+  sail-redis:
+    driver: local
+  sail-meilisearch:
+    driver: local

@@ -1,0 +1,111 @@
+@import 'tailwindcss';
+
+/* Plugin resmi untuk tipografi artikel & styling form. */
+@plugin '@tailwindcss/typography';
+@plugin '@tailwindcss/forms';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../views/**/*.blade.php';
+
+@theme {
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-serif: 'Playfair Display', Georgia, Cambria, 'Times New Roman', serif;
+
+    /* Warna brand portal berita. */
+    --color-brand-50: oklch(0.97 0.014 254.6);
+    --color-brand-500: oklch(0.55 0.19 262.9);
+    --color-brand-600: oklch(0.49 0.19 263.6);
+    --color-brand-700: oklch(0.42 0.17 264.1);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Badge kategori
+|--------------------------------------------------------------------------
+|
+| Warna badge berasal dari kolom `badge_color` (hex 7 karakter, divalidasi
+| regex). Nilainya diteruskan sebagai CSS variable inline dan dipakai di sini
+| lewat var(--badge-color). Pendekatan ini SENGAJA dipilih agar tidak
+| merangkai class Tailwind dinamis (mis. bg-[{{ $color }}]) yang akan
+| terhapus saat proses purge build Vite.
+|
+*/
+
+.badge-category {
+    background-color: var(--badge-color, #334155);
+    color: #fff;
+}
+
+.badge-category-outline {
+    border-color: var(--badge-color, #334155);
+    color: var(--badge-color, #334155);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Aksesibilitas
+|--------------------------------------------------------------------------
+*/
+
+/* Hormati preferensi pengguna yang mematikan animasi. */
+@media (prefers-reduced-motion: reduce) {
+    .marquee-track {
+        animation: none !important;
+        transform: none !important;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Indikator fokus keyboard yang jelas. */
+:focus-visible {
+    outline: 2px solid var(--color-brand-600, #1d4ed8);
+    outline-offset: 2px;
+}
+
+/* Marquee Breaking News. */
+.marquee-track {
+    display: inline-flex;
+    white-space: nowrap;
+    animation: marquee-scroll 40s linear infinite;
+}
+
+.marquee-track:hover,
+.marquee-track:focus-within {
+    animation-play-state: paused;
+}
+
+@keyframes marquee-scroll {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Reservasi ruang iklan (mencegah layout shift, target CLS < 0.1)
+|--------------------------------------------------------------------------
+*/
+
+.ad-slot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-slate-100, #f1f5f9);
+    color: var(--color-slate-400, #94a3b8);
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}

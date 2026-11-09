@@ -1,0 +1,35 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    paths:
+        - app
+        - config
+        - database
+        - routes
+        - tests
+
+    level: 6
+
+    excludePaths:
+        - vendor (?)
+        - node_modules (?)
+        - storage (?)
+        - bootstrap/cache (?)
+
+    ignoreErrors:
+        # Migration bawaan vendor (Pulse) memakai match tanpa default arm.
+        # File sudah dipublikasikan vendor dan tidak boleh diedit.
+        -
+            message: '#Match expression does not handle remaining value#'
+            path: database/migrations/*create_pulse_tables.php
+
+        # Pest: $this di dalam closure expectation terikat objek Expectation
+        # secara runtime, tidak dapat dianalisis statis.
+        -
+            message: '#Undefined variable: \$this#'
+            path: tests/Pest.php
+
+    treatPhpDocTypesAsCertain: false
+
+    tmpDir: storage/framework/phpstan

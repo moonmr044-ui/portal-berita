@@ -1,0 +1,1 @@
+O:23:"PHPStan\Cache\CacheItem":2:{s:11:"variableKey";s:74:"v2-fb4fa8e140cbdf6c31618e49c5826aa502320095447f77ca62a61cc497cadc2f-8.5.12";s:4:"data";a:3:{s:7:"classes";a:1:{s:32:"laravel\pulse\recorders\userjobs";b:1;}s:9:"functions";a:0:{}s:9:"constants";a:0:{}}}
